@@ -5,9 +5,17 @@
  */
 package com.serv;
 
+import com.model.Admin;
+import com.model.Alumno;
 import com.model.DBCon;
+import com.model.Transaccion;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 public class PagoServlet extends HttpServlet {
     
     DBCon con;
+    List<Alumno> alumnos = new ArrayList<>();
+    List<Admin> admins = new ArrayList<>();
+    List<Transaccion> transacciones = new ArrayList<>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -80,6 +91,19 @@ public class PagoServlet extends HttpServlet {
         }catch(Exception e) {
             System.out.println(e.toString());
         }
+        if(con!=null){
+            obtenerDatos();
+        }
+    }
+    
+    private void obtenerDatos(){
+        try {
+                alumnos = con.ObtenerAlumno();
+                admins = con.ObtenerAdmin();
+                transacciones = con.ObtenerTransaccion();
+            } catch (SQLException ex) {
+                Logger.getLogger(PagoServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     /**

@@ -41,4 +41,66 @@ public class DBCon {
             System.out.println(e.toString());
         }
     }
+
+    public List<Alumno> ObtenerAlumno() throws SQLException{
+        List<Alumno> alumnos = new ArrayList<>();
+        query = "SELECT * FROM Alumno";
+        rs = st.executeQuery(query);
+        
+        while(rs.next()){
+            int matricula = rs.getInt("Matricula");
+            String nombre = rs.getString("Nombre");
+            String pass = rs.getString("Pass");
+            
+            alumnos.add(new Alumno(matricula, nombre, pass));
+        }
+        rs.close();
+        return alumnos;
+    }
+
+    public List<Admin> ObtenerAdmin() throws SQLException{
+        List<Admin> admins = new ArrayList<>();
+        query = "SELECT * FROM Administrador";
+        rs = st.executeQuery(query);
+        
+        while(rs.next()){
+            String usuario = rs.getString("Usuario");
+            String nombre = rs.getString("Nombre");
+            String pass = rs.getString("Pass");
+            
+            admins.add(new Admin(usuario, nombre, pass));
+        }
+        rs.close();
+        return admins;
+    }
+
+    public List<Transaccion> ObtenerTransaccion() throws SQLException{
+        List<Transaccion> transacciones = new ArrayList<>();
+        query = "SELECT * FROM Transaccion";
+        rs = st.executeQuery(query);
+        
+        while(rs.next()){
+            int id = rs.getInt("IdTransferencia");
+            int matricula = rs.getInt("Matricula");
+            String nombre = rs.getString("Nombre");
+            String fecha = rs.getString("Fecha");
+            String tipopago = rs.getString("TipoPago");
+            double monto = rs.getDouble("Monto");
+            
+            transacciones.add(new Transaccion(id, matricula, nombre, fecha, tipopago, monto));
+        }
+        rs.close();
+        return transacciones;
+    }
+    
+    public void NuevaTransaccion(Transaccion t) throws SQLException{
+        query = "INSERT INTO Transaccion(Matricula, Nombre, Fecha, TipoPago, Monto) VALUES("
+                + "" + t.getMatricula() + ", "
+                + "\"" + t.getNombre() + "\", "
+                + "\"" + t.getFecha() + "\", "
+                + "\"" + t.getTipopago() + "\", "
+                + "" + t.getMonto()
+                + ");";
+        st.executeUpdate(query);        
+    }
 }

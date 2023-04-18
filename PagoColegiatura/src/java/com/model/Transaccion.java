@@ -5,6 +5,11 @@
  */
 package com.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  *
  * @author Alan Franco
@@ -20,6 +25,15 @@ public class Transaccion {
         this.matricula = matricula;
         this.nombre = nombre;
         this.fecha = fecha;
+        this.tipopago = tipopago;
+        this.monto = monto;
+    }
+    
+    public Transaccion(int id, int matricula, String nombre, String tipopago, double monto) {
+        this.id = id;
+        this.matricula = matricula;
+        this.nombre = nombre;
+        this.fecha = fechaTransaccion();
         this.tipopago = tipopago;
         this.monto = monto;
     }
@@ -72,6 +86,11 @@ public class Transaccion {
         this.monto = monto;
     }
     
-    
+    private String fechaTransaccion(){
+        Date date = (Date) Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        String strDate = dateFormat.format(date);
+        return strDate;
+    }
     
 }
