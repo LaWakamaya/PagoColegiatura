@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -93,6 +95,66 @@ public class PagoServlet extends HttpServlet {
         }
         if(con!=null){
             obtenerDatos();
+            
+            String accion = request.getParameter("accion");
+            switch(accion){
+                case "Administrador":{
+                    RequestDispatcher view = request.getRequestDispatcher("iniciaAdmin.jsp");
+                    view.forward(request, response);
+                    break;
+                }
+                case "Alumno":{
+                    RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+                    view.forward(request, response);
+                    break;
+                }
+                case "Inicia sesion":{
+                    int matricula = Integer.parseInt(request.getParameter("matricula"));
+                    String pass = request.getParameter("pass");
+                    boolean flagSesion = false;
+                    obtenerDatos();
+                    
+                    for (int i = 0; i < alumnos.size(); i++) {
+                        if((matricula == alumnos.get(i).getMatricula()) &&
+                                pass.equals(alumnos.get(i).getPass())){
+                            flagSesion = true;
+                            HttpSession sesion = request.getSession();
+                            sesion.setAttribute("alumnoSesion", alumnos.get(i));
+                            break;
+                        }
+                    }
+                    if(flagSesion){
+                        RequestDispatcher view = request.getRequestDispatcher("pagosAlumno.jsp");
+                        view.forward(request, response);
+                    }else{
+                        RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+                        view.forward(request, response);
+                    }
+                }
+                case "Inicia admin":{
+                    String usuario = request.getParameter("usuario");
+                    String pass = request.getParameter("pass");
+                    boolean flagSesion = false;
+                    obtenerDatos();
+                    
+                    for (int i = 0; i < admins.size(); i++) {
+                        if(usuario.equals(admins.get(i).getUsuario()) &&
+                                pass.equals(admins.get(i).getPass())){
+                            flagSesion = true;
+                            HttpSession sesion = request.getSession(true);
+                            sesion.setAttribute("adminSesion", admins.get(i));
+                            break;
+                        }
+                    }
+                    if(flagSesion){
+                        RequestDispatcher view = request.getRequestDispatcher("pagosAdmin.jsp");
+                        view.forward(request, response);
+                    }else{
+                        RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+                        view.forward(request, response);
+                    }
+                }
+            }
         }
     }
     
