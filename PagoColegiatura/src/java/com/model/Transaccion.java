@@ -29,15 +29,14 @@ public class Transaccion {
         this.monto = monto;
     }
     
-    public Transaccion(int id, int matricula, String nombre, String tipopago, double monto) {
-        this.id = id;
+    public Transaccion(int matricula, String nombre, String tipopago, double monto) {
         this.matricula = matricula;
         this.nombre = nombre;
         this.fecha = fechaTransaccion();
         this.tipopago = tipopago;
         this.monto = monto;
     }
-
+    
     public int getId() {
         return id;
     }

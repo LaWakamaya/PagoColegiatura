@@ -103,4 +103,16 @@ public class DBCon {
                 + ");";
         st.executeUpdate(query);        
     }
+    
+    public void ActualizarTransaccion(Transaccion t) throws SQLException{
+        query = "UPDATE Transaccion SET "
+                + "IdTransferencia = " + t.getId() + ", "
+                + "Matricula = " + t.getMatricula() + ", "
+                + "Nombre = \"" + t.getNombre() + "\", "
+                + "Fecha = \"" + t.getFecha() + "\", "
+                + "TipoPago = \"" + t.getTipopago() + "\", "
+                + "Monto = " + t.getMonto()+ " "
+                + "WHERE IdTransferencia = " + t.getId() + ";";
+        st.executeUpdate(query);
+    }
 }
