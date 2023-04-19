@@ -1,9 +1,10 @@
 <%-- 
-    Document   : pagosAdmin
+    Document   : infoAlumno
     Created on : 18 abr 2023, 17:28:06
     Author     : Alan Franco
 --%>
 
+<%@page import="com.model.Alumno"%>
 <%@page import="java.util.List"%>
 <%@page import="com.model.Transaccion"%>
 <%@page import="com.model.Admin"%>
@@ -13,11 +14,12 @@
     HttpSession sesion = request.getSession();
     Admin admin = (Admin) sesion.getAttribute("adminSesion");
     List<Transaccion> trans = (List<Transaccion>) request.getAttribute("transacciones");
+    Alumno a = (Alumno) request.getAttribute("alumnoI");
     %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Colegiaturas admin</title>
+        <title>Colegiaturas <%= a.getNombre() %></title>
     </head>
     <body style="font-family:verdana;">
         <form action="PagoServlet.do" method="post">
@@ -62,6 +64,7 @@
                 
                 <%
                     for (int i = trans.size()-1; i >= 0; i--) {
+                        if(a.getMatricula() == trans.get(i).getMatricula()){
                     %>
                 <tr>
                     <th style="width: 15%"><%= trans.get(i).getId()%></th>
@@ -76,6 +79,7 @@
                         </td>
                </tr>
                 <%
+                        }
                     }
                     %>
         </form>

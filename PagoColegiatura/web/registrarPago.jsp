@@ -1,5 +1,5 @@
 <%-- 
-    Document   : pagosAdmin
+    Document   : registrarPago
     Created on : 18 abr 2023, 17:28:06
     Author     : Alan Franco
 --%>
@@ -17,12 +17,23 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Colegiaturas admin</title>
+        <title>Registrar pago</title>
     </head>
     <body style="font-family:verdana;">
         <form action="PagoServlet.do" method="post">
             <h1>Hola <%=admin.getNombre()%></h1>
+            <h1 style="font-size: 150%">Registrar pago</h1></br>
+            
+            <label>Matricula alumno:</label></br>
+            <input type="text" name="matricula" size="30"><br>
+            
+            <label>Monto:</label></br>
+            <input type="text" name="monto" size="30"><br><br>
+            
+            <input type="submit" name="accion" value="Registrar" style="font-size:100%; float:left;"></br>
+                    
             <hr>
+            
             <input type="submit" name="accion" value="Registrar pago" style="float:right;">
             <h1 style="font-size: 150%">Historial de pagos</h1></br>
             <table border = 1 style="width: 85%; margin-left:auto;margin-right:auto;">
@@ -33,7 +44,7 @@
                     <th style="width: 15%">Fecha</th>
                     <th style="width: 15%">Tipo pago</th>
                     <th style="width: 15%">Cantidad</th>
-                    <th style="width: 14%">Editar</th>
+                    <th style="width: 9%">Editar</th>
                 </tr>
                 <tr>
                     <th style="width: 15%">
@@ -70,9 +81,8 @@
                     <th style="width: 15%"><%= trans.get(i).getFecha()%></th>
                     <th style="width: 15%"><%= trans.get(i).getTipopago()%></th>
                     <th style="width: 15%">$<%= trans.get(i).getMonto()%> MXN</th>
-                    <td style="width: 14%; text-align:center">
+                    <td style="width: 9%; text-align:center">
                         <input type="submit" name="accion" value="Editar <%=trans.get(i).getId()%>"/>
-                        <input type="submit" name="accion" value="Info <%=trans.get(i).getMatricula()%>"/>
                         </td>
                </tr>
                 <%

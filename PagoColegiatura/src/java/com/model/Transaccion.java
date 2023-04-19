@@ -36,7 +36,7 @@ public class Transaccion {
         this.tipopago = tipopago;
         this.monto = monto;
     }
-
+    
     public int getId() {
         return id;
     }

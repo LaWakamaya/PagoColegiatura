@@ -42,9 +42,8 @@
             
             <input type="submit" name="accion" value="Realizar pago" style="font-size:100%; float:right;"></br>
             
-            
-            
             <hr>
+            
             <h1 style="font-size: 150%">Historial de pagos</h1></br>
             <table border = 1 style="width: 80%; margin-left:auto;margin-right:auto;">
                 <tr>
@@ -54,10 +53,9 @@
                     <th style="width: 16%">Fecha</th>
                     <th style="width: 16%">Tipo pago</th>
                     <th style="width: 16%">Cantidad</th>
-                    
                 </tr>
                 <%
-                    for (int i = 0; i < trans.size(); i++) {
+                    for (int i = trans.size()-1; i >= 0; i--) {
                         if(alumno.getMatricula() == trans.get(i).getMatricula()){
                     %>
                 <tr>

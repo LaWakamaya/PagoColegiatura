@@ -183,6 +183,175 @@ public class PagoServlet extends HttpServlet {
                         
                     }
                 }
+                case "Registrar pago":{
+                    request.setAttribute("transacciones", transacciones);
+                    RequestDispatcher view = request.getRequestDispatcher("registrarPago.jsp");
+                    view.forward(request, response);
+                }
+                case "Registrar":{
+                    int matricula = Integer.parseInt(request.getParameter("matricula"));
+                    int monto = Integer.parseInt(request.getParameter("monto"));
+                    boolean flagExiste = false;
+                    Alumno a = new Alumno(1,"1","1");
+                    for (int i = 0; i < alumnos.size(); i++) {
+                        if(matricula == alumnos.get(i).getMatricula()){
+                            a = alumnos.get(i);
+                            flagExiste = true;
+                            break;
+                        }
+                    }
+                    if(flagExiste){
+                        int matriculaT = a.getMatricula();
+                        String nombreT = a.getNombre();
+                        Transaccion nuevaT = new Transaccion(matriculaT, nombreT, "Presencial", monto);
+                        
+                        try {
+                            con.NuevaTransaccion(nuevaT);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PagoServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        obtenerDatos();
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("pagosAdmin.jsp");
+                        view.forward(request, response);
+                    }else{
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("registrarPago.jsp");
+                        view.forward(request, response);
+                    }
+                    
+                }
+                case "Actualizar":{
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    int matricula = Integer.parseInt(request.getParameter("matricula"));
+                    String tipopago = request.getParameter("tipopago") + "*";
+                    double monto = Double.parseDouble(request.getParameter("monto"));
+                    boolean existeA = false;
+                    Alumno a = new Alumno(1,"1","1");
+                    for (int i = 0; i < alumnos.size(); i++) {
+                        if(matricula == alumnos.get(i).getMatricula()){
+                            a = alumnos.get(i);
+                            existeA = true;
+                            break;
+                        }
+                    }
+                    
+                    Transaccion t = new Transaccion(1,1,"","","",1.0);
+                    for (int i = 0; i < transacciones.size(); i++) {
+                        if(id == transacciones.get(i).getId()){
+                            t = transacciones.get(i);
+                            break;
+                        }
+                    }
+                    if(existeA){
+                        Transaccion transE = new Transaccion(id, matricula, a.getNombre(), t.getFecha(), tipopago, monto);
+                        
+                        try {
+                            con.ActualizarTransaccion(transE);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PagoServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        obtenerDatos();
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("pagosAdmin.jsp");
+                        view.forward(request, response);
+                    }else{
+                        obtenerDatos();
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("pagosAdmin.jsp");
+                        view.forward(request, response);
+                    }
+                }
+                default:
+                    break;
+            }
+            if (accion.contains("Editar")){
+                for (int i = 0; i < transacciones.size(); i++) {
+                    String cad = "Editar " + transacciones.get(i).getId();
+                    if(accion.equals(cad)){
+                        request.setAttribute("transE", transacciones.get(i));
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("editarPago.jsp");
+                        view.forward(request, response);
+                    }
+                }
+            }
+            else if (accion.contains("Info")){
+                for (int i = 0; i < alumnos.size(); i++) {
+                    String cad = "Info " + alumnos.get(i).getMatricula();
+                    if(accion.equals(cad)){
+                        request.setAttribute("alumnoI", alumnos.get(i));
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("infoAlumno.jsp");
+                        view.forward(request, response);
+                    }
+                }
+            }
+            else if (accion.contains("Buscar")){
+                switch(accion){
+                    case "Buscar Id":{
+                        String id = request.getParameter("buscarId");
+                        request.setAttribute("tipoBusqueda", "id");
+                        request.setAttribute("id", id);
+                        request.setAttribute("matricula", "1");
+                        request.setAttribute("nombre", "nombre");
+                        request.setAttribute("fecha", "fecha");
+                        request.setAttribute("tipo", "tipo");
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("adminBusqueda.jsp");
+                        view.forward(request, response);
+                    }
+                    case "Buscar Matricula":{
+                        String matricula = request.getParameter("buscarMat");
+                        request.setAttribute("tipoBusqueda", "matricula");
+                        request.setAttribute("id", "1");
+                        request.setAttribute("matricula", matricula);
+                        request.setAttribute("nombre", "nombre");
+                        request.setAttribute("fecha", "fecha");
+                        request.setAttribute("tipo", "tipo");
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("adminBusqueda.jsp");
+                        view.forward(request, response);
+                    }
+                    case "Buscar Nombre":{
+                        String nombre = request.getParameter("buscarNom");
+                        request.setAttribute("tipoBusqueda", "nombre");
+                        request.setAttribute("id", "id");
+                        request.setAttribute("matricula", "matricula");
+                        request.setAttribute("nombre", nombre);
+                        request.setAttribute("fecha", "fecha");
+                        request.setAttribute("tipo", "tipo");
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("adminBusqueda.jsp");
+                        view.forward(request, response);
+                    }
+                    case "Buscar Fecha":{
+                        String fecha = request.getParameter("buscarFecha");
+                        request.setAttribute("tipoBusqueda", "fecha");
+                        request.setAttribute("id", "id");
+                        request.setAttribute("matricula", "matricula");
+                        request.setAttribute("nombre", "nombre");
+                        request.setAttribute("fecha", fecha);
+                        request.setAttribute("tipo", "tipo");
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("adminBusqueda.jsp");
+                        view.forward(request, response);
+                    }
+                    case "Buscar Tipo":{
+                        String tipo = request.getParameter("buscarTipo");
+                        request.setAttribute("tipoBusqueda", "tipo");
+                        request.setAttribute("id", "id");
+                        request.setAttribute("matricula", "matricula");
+                        request.setAttribute("nombre", "nombre");
+                        request.setAttribute("fecha", "fecha");
+                        request.setAttribute("tipo", tipo);
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("adminBusqueda.jsp");
+                        view.forward(request, response);
+                    }
+                }
             }
         }
     }
