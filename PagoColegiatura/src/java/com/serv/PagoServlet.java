@@ -124,6 +124,7 @@ public class PagoServlet extends HttpServlet {
                         }
                     }
                     if(flagSesion){
+                        request.setAttribute("transacciones", transacciones);
                         RequestDispatcher view = request.getRequestDispatcher("pagosAlumno.jsp");
                         view.forward(request, response);
                     }else{
@@ -147,11 +148,39 @@ public class PagoServlet extends HttpServlet {
                         }
                     }
                     if(flagSesion){
+                        request.setAttribute("transacciones", transacciones);
                         RequestDispatcher view = request.getRequestDispatcher("pagosAdmin.jsp");
                         view.forward(request, response);
                     }else{
                         RequestDispatcher view = request.getRequestDispatcher("index.jsp");
                         view.forward(request, response);
+                    }
+                }
+                case "Realizar pago":{
+                    int monto = Integer.parseInt(request.getParameter("monto"));
+                    String nombre = request.getParameter("nombre");
+                    String tarjeta = request.getParameter("tarjeta");
+                    String exp = request.getParameter("exp");
+                    int cvv = Integer.parseInt(request.getParameter("cvv"));
+                    
+                    if(monto != 0 && !nombre.isEmpty() && !tarjeta.isEmpty() && !exp.isEmpty() && cvv != 0){
+                        HttpSession sesion = request.getSession();
+                        Alumno alumno = (Alumno) sesion.getAttribute("alumnoSesion");
+                        int matriculaT = alumno.getMatricula();
+                        String nombreT = alumno.getNombre();
+                        Transaccion nuevaT = new Transaccion(matriculaT, nombreT, "En linea", monto);
+                        
+                        try {
+                            con.NuevaTransaccion(nuevaT);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PagoServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        obtenerDatos();
+                        request.setAttribute("transacciones", transacciones);
+                        RequestDispatcher view = request.getRequestDispatcher("pagosAlumno.jsp");
+                        view.forward(request, response);
+                        
                     }
                 }
             }
